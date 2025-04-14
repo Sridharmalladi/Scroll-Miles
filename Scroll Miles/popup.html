@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Manrope', sans-serif;
+      width: 280px;
+      height: 360px;
+      background-color: #111827;
+      color: #F9FAFB;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 100%;
+      padding: 20px 15px 10px;
+      box-sizing: border-box;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .popup-footer {
+      font-size: 10px;
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 16px;
+    }
+
+    .popup-footer a {
+      color: #8B5CF6;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    button {
+      background-color: #8B5CF6;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    button:hover {
+      background-color: #7C3AED;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <h1>Scroll Miles</h1>
+      <div id="miles" class="stat">Loading...</div>
+      <button id="dashboardBtn">Open Dashboard</button>
+    </div>
+
+    <div class="popup-footer">
+      Made with love &#129293; by 
+      <a href="https://www.linkedin.com/in/sridhar-malladi/" target="_blank">
+        Sridhar Malladi
+      </a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
