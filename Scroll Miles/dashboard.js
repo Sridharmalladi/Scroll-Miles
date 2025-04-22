@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const PIXELS_PER_INCH = 96;
   const INCHES_PER_MILE = 63360;
-  const SPEED_ADJUST = 0.6;
+  const SPEED_ADJUST = 0.7;
 
   let chart;
   const ctx = document.getElementById("weeklyChart").getContext("2d");
@@ -52,20 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
-  // ✅ New logic: Get all 7 days from current week (Mon to Sun)
   const getCurrentWeekDates = () => {
     const today = new Date();
-    const currentDay = today.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+    const currentDay = today.getDay();
     const monday = new Date(today);
-    monday.setDate(today.getDate() - ((currentDay + 6) % 7)); // shift so Monday is 0
+    monday.setDate(today.getDate() - ((currentDay + 6) % 7));
     monday.setHours(0, 0, 0, 0);
 
     const days = [];
+    const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
     for (let i = 0; i < 7; i++) {
       const d = new Date(monday);
       d.setDate(monday.getDate() + i);
-      days.push(d.toISOString().split("T")[0]);
+      const iso = d.toISOString().split("T")[0];
+      days.push({ iso, label: dayLabels[i] });
     }
+
     return days;
   };
 
@@ -77,14 +80,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const events = data.scrollEvents || [];
     const thisWeekDays = getCurrentWeekDates();
 
-    const milesPerDay = thisWeekDays.map(day => {
+    const labels = thisWeekDays.map(day => day.label);
+    const isoDates = thisWeekDays.map(day => day.iso);
+
+    const milesPerDay = isoDates.map(date => {
       const totalPixels = events
-        .filter(e => new Date(e.timestamp).toISOString().startsWith(day))
+        .filter(e => new Date(e.timestamp).toISOString().startsWith(date))
         .reduce((sum, e) => sum + e.delta, 0);
       return (totalPixels / PIXELS_PER_INCH / INCHES_PER_MILE) * SPEED_ADJUST;
     });
 
-    renderChart(thisWeekDays, milesPerDay);
+    renderChart(labels, milesPerDay);
 
     // Milestones increase in difficulty
     const badgeMilestones = [1.2, 3.61, 6.56, 9.81, 12.55, 18.48];
@@ -97,17 +103,16 @@ document.addEventListener("DOMContentLoaded", () => {
       "Scrolling Legend"
     ];
     const badgeMessages = [
-      "You've scrolled more than you've walked today. No judgment. 👴",
-      "You're two scrolls away from becoming part of the algorithm. 🧬",
-      "You're halfway in. Your hand's numb. Your soul's buffering. 💀",
-      "You just scrolled a MARATHON. Local Wi-Fi fainted. 🏅",
-      "Your scroll wheel tapped out. It left a resignation letter. 💼",
-      "Scroll Miles? Bro, you unlocked a spiritual awakening. 💣"
+      "You've scrolled more than you've walked today. ",
+      "You're two scrolls away from becoming part of the algorithm. ",
+      "You're halfway in. Your hand's numb. ",
+      "You just scrolled a MARATHON. ",
+      "Your scroll wheel tapped out. ",
+      "Scroll Miles? Bro, you unlocked a spiritual awakening. "
     ];
 
     const badgeContainer = document.getElementById("badgesContainer");
     badgeContainer.innerHTML = "";
-    const sound = document.getElementById("badgeSound");
 
     let earnedAny = false;
 
@@ -128,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (badgeUnlocked && progress === 100) {
         earnedAny = true;
-        sound.play();
+        // sound.play(); // removed
       }
     });
 
